@@ -65,7 +65,7 @@ func UpdateProductHandler(c *gin.Context) {
 	err = db.Where("id=?", id).First(&product).Error
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Product not found!",
+			"error": "Product not found",
 		})
 		return
 	}
