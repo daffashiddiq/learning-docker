@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Add your build actions here
-                sh '/usr/local/go/bin/go build -o your-binary-name'
+                sh 'go build -o learning-docker'
             }
         }
         
@@ -33,7 +33,7 @@ pipeline {
         stage('Run') {
             steps {
                 // Add your run actions here
-                sh './your-binary-name'
+                sh './learning-docker'
             }
         }
     }
