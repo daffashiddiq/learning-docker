@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Add your build actions here
-                sh 'go build -o your-binary-name'
+                sh '/usr/local/go/bin/go build -o your-binary-name'
             }
         }
         
