@@ -1,40 +1,49 @@
 pipeline {
     agent any
-    
+    environment {
+        GIT_URL = 'https://github.com/tikayesi/try-jenkins.git'
+        BRANCH = 'tes-pipeline'
+        IMAGE = 'my-golang-test'
+        CONTAINER = 'my-golang-test-app'
+        DOCKER_APP = 'docker'
+        DB_HOST = 'product-db'
+        DB_USER = 'postgres'
+        DB_NAME = 'postgres'
+        DB_PASSWORD = 'P@ssw0rd'
+        DB_PORT = '5434'
+        API_PORT = '8182'
+    }
     stages {
-        stage('Cleanup') {
+        stage("Cleaning up") {
             steps {
-                // Add your cleanup actions here
-                sh 'rm -rf learning-docker'
+                echo 'Cleaning up'
+                sh "${DOCKER_APP} rm -f ${CONTAINER} || true"
             }
         }
-        
-        stage('Clone') {
+
+        stage("Clone") {
             steps {
-                // Add your cloning actions here
-                git branch: 'main', url: 'https://github.com/daffashiddiq/learning-docker.git'
+                echo 'Clone'
+                git branch: "${BRANCH}", url: "${GIT_URL}"
             }
         }
-        
-        stage('Build') {
+
+        stage("Build and Run") {
             steps {
-                // Add your build actions here
-                sh 'go build -o learning-docker'
+                echo 'Build and Run'
+                sh "DB_HOST=${DB_HOST} DB_PORT=${DB_PORT} DB_NAME=${DB_NAME} DB_USER=${DB_USER} DB_PASSWORD=${DB_PASSWORD} API_PORT=${API_PORT} ${DOCKER_APP} compose up -d"
             }
         }
-        
-        stage('Test') {
-            steps {
-                // Add your test actions here
-                sh 'go test ./...'
-            }
+    }
+    post {
+        always {
+            echo 'This will always run'
         }
-        
-        stage('Run') {
-            steps {
-                // Add your run actions here
-                sh './learning-docker'
-            }
+        success {
+            echo 'This will run only if successful'
+        }
+        failure {
+            echo 'This will run only if failed'
         }
     }
 }
